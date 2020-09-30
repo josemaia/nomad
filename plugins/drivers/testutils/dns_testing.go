@@ -39,7 +39,7 @@ func TestTaskDNSConfig(t *testing.T, driver *DriverHarness, taskID string, dns *
 				require.ElementsMatch(t, dns.Options, dresolvconf.GetOptions(resolvConf))
 			}
 		} else {
-			system, err := dresolvconf.Get()
+			system, err := dresolvconf.GetSpecific("/etc/resolv.conf")
 			require.NoError(t, err)
 			require.ElementsMatch(t, dresolvconf.GetNameservers(system.Content, dtypes.IP), dresolvconf.GetNameservers(resolvConf, dtypes.IP))
 			require.ElementsMatch(t, dresolvconf.GetSearchDomains(system.Content), dresolvconf.GetSearchDomains(resolvConf))
