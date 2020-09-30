@@ -14,9 +14,7 @@ const (
 type DeploymentEvent struct {
 	Event      string
 	Deployment *structs.Deployment
-	Job        *structs.Job          `json:",omitempty"`
-	Eval       *structs.Evaluation   `json:",omitempty"`
-	Allocs     []*structs.Allocation `json:",omitempty"`
+	Eval       *structs.Evaluation `json:",omitempty"`
 }
 
 func DeploymentEventFromChanges(msgType structs.MessageType, tx ReadTxn, changes Changes) ([]stream.Event, error) {
@@ -93,9 +91,7 @@ func DeploymentEventFromChanges(msgType structs.MessageType, tx ReadTxn, changes
 		Payload: &DeploymentEvent{
 			Event:      eventType,
 			Deployment: deployment,
-			Job:        job,
 			Eval:       eval,
-			Allocs:     allocs,
 		},
 	}
 

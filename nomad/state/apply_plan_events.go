@@ -17,6 +17,7 @@ type EvalEvent struct {
 }
 
 type AllocEvent struct {
+	Event string
 	Alloc *structs.Allocation
 }
 
@@ -61,12 +62,20 @@ func ApplyPlanResultEventsFromChanges(tx ReadTxn, changes Changes) ([]stream.Eve
 			if !ok {
 				return nil, fmt.Errorf("transaction change was not an Allocation")
 			}
+			before := change.Before
+			var msg string
+			if before == nil {
+				msg = "alloc created"
+			} else {
+				msg = "alloc updated"
+			}
 
 			event := stream.Event{
 				Topic: TopicAlloc,
 				Index: changes.Index,
 				Key:   after.ID,
 				Payload: &AllocEvent{
+					Event: msg,
 					Alloc: after,
 				},
 			}

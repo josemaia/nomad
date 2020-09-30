@@ -356,7 +356,10 @@ func (s *StateStore) UpsertPlanResults(ctx context.Context, index uint64, result
 		}
 	}
 
-	txn.Commit()
+	if err := txn.Commit(); err != nil {
+		return err
+	}
+
 	return nil
 }
 
