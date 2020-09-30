@@ -200,6 +200,8 @@ func processDBChanges(tx ReadTxn, changes Changes) ([]stream.Event, error) {
 		return DeploymentEventFromChanges(changes.MsgType, tx, changes)
 	case structs.DeploymentAllocHealthRequestType:
 		return DeploymentEventFromChanges(changes.MsgType, tx, changes)
+	case structs.ApplyPlanResultsRequestType:
+		return ApplyPlanResultEventsFromChanges(tx, changes)
 	}
 	return []stream.Event{}, nil
 }

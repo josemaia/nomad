@@ -127,7 +127,7 @@ func TestStateStore_UpsertPlanResults_AllocationsCreated_Denormalized(t *testing
 		EvalID: eval.ID,
 	}
 	assert := assert.New(t)
-	err := state.UpsertPlanResults(1000, &res)
+	err := state.UpsertPlanResults(context.Background(), 1000, &res)
 	assert.Nil(err)
 
 	ws := memdb.NewWatchSet()
@@ -203,7 +203,7 @@ func TestStateStore_UpsertPlanResults_AllocationsDenormalized(t *testing.T) {
 	}
 	assert := assert.New(t)
 	planModifyIndex := uint64(1000)
-	err := state.UpsertPlanResults(planModifyIndex, &res)
+	err := state.UpsertPlanResults(context.Background(), planModifyIndex, &res)
 	require.NoError(err)
 
 	ws := memdb.NewWatchSet()
@@ -284,7 +284,7 @@ func TestStateStore_UpsertPlanResults_Deployment(t *testing.T) {
 		EvalID:     eval.ID,
 	}
 
-	err := state.UpsertPlanResults(1000, &res)
+	err := state.UpsertPlanResults(context.Background(), 1000, &res)
 	if err != nil {
 		t.Fatalf("err: %v", err)
 	}
@@ -332,7 +332,7 @@ func TestStateStore_UpsertPlanResults_Deployment(t *testing.T) {
 		EvalID:     eval.ID,
 	}
 
-	err = state.UpsertPlanResults(1001, &res)
+	err = state.UpsertPlanResults(context.Background(), 1001, &res)
 	if err != nil {
 		t.Fatalf("err: %v", err)
 	}
@@ -400,7 +400,7 @@ func TestStateStore_UpsertPlanResults_PreemptedAllocs(t *testing.T) {
 		PreemptionEvals: []*structs.Evaluation{eval2},
 	}
 
-	err = state.UpsertPlanResults(1000, &res)
+	err = state.UpsertPlanResults(context.Background(), 1000, &res)
 	require.NoError(err)
 
 	ws := memdb.NewWatchSet()
@@ -486,7 +486,7 @@ func TestStateStore_UpsertPlanResults_DeploymentUpdates(t *testing.T) {
 		EvalID:            eval.ID,
 	}
 
-	err := state.UpsertPlanResults(1000, &res)
+	err := state.UpsertPlanResults(context.Background(), 1000, &res)
 	if err != nil {
 		t.Fatalf("err: %v", err)
 	}

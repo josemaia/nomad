@@ -86,9 +86,10 @@ func DeploymentEventFromChanges(msgType structs.MessageType, tx ReadTxn, changes
 	}
 
 	event := stream.Event{
-		Topic: TopicDeployment,
-		Index: changes.Index,
-		Key:   deployment.ID,
+		Topic:      TopicDeployment,
+		Index:      changes.Index,
+		Key:        deployment.ID,
+		FilterKeys: []string{deployment.JobID},
 		Payload: &DeploymentEvent{
 			Event:      eventType,
 			Deployment: deployment,

@@ -226,7 +226,7 @@ func (n *nomadFSM) Apply(log *raft.Log) interface{} {
 	case structs.VaultAccessorDeregisterRequestType:
 		return n.applyDeregisterVaultAccessor(buf[1:], log.Index)
 	case structs.ApplyPlanResultsRequestType:
-		return n.applyPlanResults(buf[1:], log.Index)
+		return n.applyPlanResults(msgType, buf[1:], log.Index)
 	case structs.DeploymentStatusUpdateRequestType:
 		return n.applyDeploymentStatusUpdate(msgType, buf[1:], log.Index)
 	case structs.DeploymentPromoteRequestType:
@@ -957,14 +957,16 @@ func (n *nomadFSM) applyDeregisterSIAccessor(buf []byte, index uint64) interface
 }
 
 // applyPlanApply applies the results of a plan application
-func (n *nomadFSM) applyPlanResults(buf []byte, index uint64) interface{} {
+func (n *nomadFSM) applyPlanResults(msgType structs.MessageType, buf []byte, index uint64) interface{} {
 	defer metrics.MeasureSince([]string{"nomad", "fsm", "apply_plan_results"}, time.Now())
 	var req structs.ApplyPlanResultsRequest
 	if err := structs.Decode(buf, &req); err != nil {
 		panic(fmt.Errorf("failed to decode request: %v", err))
 	}
 
-	if err := n.state.UpsertPlanResults(index, &req); err != nil {
+	ctx := context.WithValue(context.Background(), state.CtxMsgType, msgType)
+
+	if err := n.state.UpsertPlanResults(ctx, index, &req); err != nil {
 		n.logger.Error("ApplyPlan failed", "error", err)
 		return err
 	}

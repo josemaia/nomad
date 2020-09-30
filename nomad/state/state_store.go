@@ -270,7 +270,7 @@ RUN_QUERY:
 }
 
 // UpsertPlanResults is used to upsert the results of a plan.
-func (s *StateStore) UpsertPlanResults(index uint64, results *structs.ApplyPlanResultsRequest) error {
+func (s *StateStore) UpsertPlanResults(ctx context.Context, index uint64, results *structs.ApplyPlanResultsRequest) error {
 	snapshot, err := s.Snapshot()
 	if err != nil {
 		return err
@@ -292,7 +292,7 @@ func (s *StateStore) UpsertPlanResults(index uint64, results *structs.ApplyPlanR
 		return err
 	}
 
-	txn := s.db.WriteTxn(index)
+	txn := s.db.WriteTxnCtx(ctx, index)
 	defer txn.Abort()
 
 	// Upsert the newly created or updated deployment

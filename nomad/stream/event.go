@@ -7,8 +7,9 @@ const (
 type Topic string
 
 type Event struct {
-	Topic   Topic
-	Key     string
-	Index   uint64
-	Payload interface{}
+	Topic      Topic
+	Key        string
+	FilterKeys []string
+	Index      uint64
+	Payload    interface{}
 }
